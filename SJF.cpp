@@ -6,10 +6,10 @@
 #include <algorithm>
 
 int main() {
-    std::vector<std::pair<int, int>> processes;
-    std::vector<std::pair<int, int>> completion;
-    std::vector<std::pair<int, std::pair<int, int>>> queue;
-    std::vector<std::pair<int, int>> TTWT;
+    std::vector<std::pair<unsigned, unsigned>> processes;
+    std::vector<std::pair<size_t, unsigned>> completion;
+    std::vector<std::pair<size_t, std::pair<unsigned, unsigned>>> queue;
+    std::vector<std::pair<unsigned, unsigned>> TTWT;
     unsigned sum = 0, TT = 0;
     std::string arrival_t = "", burst_t = "";
     unsigned at_num, bt_num, time_sum = 0;
@@ -25,14 +25,15 @@ int main() {
         processes.push_back(std::make_pair(at_num, bt_num));
         time_sum += bt_num;
     }
-    std::pair<int, std::pair<int, int>> pro;
+    std::pair<size_t, std::pair<unsigned, unsigned>> pro;
     size_t j = 0, i = 0;
     while(i < time_sum) {
         while(i >= processes[j].first && j < processes.size()){
             queue.push_back(std::make_pair(j, processes[j]));
             j++;
         }
-        std::sort(queue.begin(), queue.end(), [](std::pair<int, std::pair<int, int>>& a, std::pair<int, std::pair<int, int>>& b)
+        std::sort(queue.begin(), queue.end(),
+        [](const std::pair<size_t, std::pair<unsigned, unsigned>>& a, const std::pair<size_t, std::pair<unsigned, unsigned>>& b)
         { return a.second.second < b.second.second; });
         pro = queue[0];
         while(pro.second.second > 0) {
@@ -42,7 +43,9 @@ int main() {
         completion.push_back(std::make_pair(pro.first, i));
         queue.erase(queue.begin());
     }
-    std::sort(completion.begin(), completion.end(), [](std::pair<int, int>& a, std::pair<int, int>& b){ return a.first < b.first; });
+    std::sort(completion.begin(), completion.end(),
+    [](const std::pair<size_t, unsigned>& a, const std::pair<size_t, unsigned>& b)
+    { return a.first < b.first; });
     for(size_t i = 0; i < processes.size(); i++){
         TT = completion[i].second - processes[i].first;
         TTWT.push_back(std::make_pair(TT, TT - processes[i].second));

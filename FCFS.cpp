@@ -5,9 +5,9 @@
 #include<utility>
 
 int main(){
-    std::vector<std::pair<int, int>> processes;
-    std::vector<int> completion;
-    std::vector<std::pair<int, int>> TTWT;
+    std::vector<std::pair<size_t, unsigned>> processes;
+    std::vector<unsigned> completion;
+    std::vector<std::pair<unsigned, unsigned>> TTWT;
     unsigned sum = 0, TT = 0;
     std::string arrival_t = "", burst_t = "";
     unsigned rt_num, bt_num;

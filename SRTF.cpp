@@ -5,15 +5,15 @@
 #include<algorithm>
 
 struct Process{
-    int at;
-    int bt;
+    unsigned at;
+    unsigned bt;
 };
 
 int main(){
     std::vector<Process> processes;
-    std::vector<std::pair<int, Process>> queue;
-    std::vector<std::pair<int, int>> completion;
-    std::vector<std::pair<int, int>> TTWT;
+    std::vector<std::pair<size_t, Process>> queue;
+    std::vector<std::pair<size_t, unsigned>> completion;
+    std::vector<std::pair<unsigned, unsigned>> TTWT;
     std::string arrival_t = "", burst_t = "";
     unsigned at_num, bt_num, time_sum = 0, TT;
     std::cout << "Enter arrival time: ";
@@ -30,13 +30,13 @@ int main(){
         time_sum += bt_num;
     }
     size_t j = 0;
-    std::pair<int, Process> processing;
+    std::pair<size_t, Process> processing;
     for(size_t time = 0; time < time_sum; time++){
         if(time == processes[j].at){
             queue.push_back(std::make_pair(j, processes[j]));
             j++;
         }
-        std::sort(queue.begin(), queue.end(), [](const std::pair<int, Process>& a, const std::pair<int, Process>& b)
+        std::sort(queue.begin(), queue.end(), [](const std::pair<size_t, Process>& a, const std::pair<size_t, Process>& b)
         { return a.second.bt < b.second.bt; });
         processing = queue[0];
         processing.second.bt--;
@@ -48,7 +48,7 @@ int main(){
             queue.push_back(processing);
         }
     }
-    std::sort(completion.begin(), completion.end(), [](std::pair<int, int>& a, std::pair<int, int>& b)
+    std::sort(completion.begin(), completion.end(), [](const std::pair<unsigned, unsigned>& a, const std::pair<unsigned, unsigned>& b)
     { return a.first < b.first; });
     for(size_t i = 0; i < processes.size(); i++){
         TT = completion[i].second - processes[i].at;

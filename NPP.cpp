@@ -13,9 +13,9 @@ struct Process{
 
 int main(){
     std::vector<Process> processes;
-    std::vector<std::pair<int, int>> completion;
-    std::vector<std::pair<int, Process>> queue;
-    std::vector<std::pair<int, int>> TTWT;
+    std::vector<std::pair<size_t, unsigned>> completion;
+    std::vector<std::pair<size_t, Process>> queue;
+    std::vector<std::pair<unsigned, unsigned>> TTWT;
     std::string arrival_t = "", burst_t = "", priority = "";
     unsigned at_num, bt_num, pr_num, time_sum = 0;
     std::cout << "Enter arrival time: ";
@@ -35,7 +35,7 @@ int main(){
         processes.push_back(p);
         time_sum += bt_num; 
     }
-    std::pair<int, Process> processing;
+    std::pair<size_t, Process> processing;
     size_t i = 0, j = 0;
     while(i < time_sum){
         while(i >= processes[j].at && j < processes.size()){
@@ -43,7 +43,7 @@ int main(){
             j++;
         }
         if(!queue.empty()){
-            std::sort(queue.begin(), queue.end(), [](const std::pair<int, Process>& a, const std::pair<int, Process>& b)
+            std::sort(queue.begin(), queue.end(), [](const std::pair<size_t, Process>& a, const std::pair<size_t, Process>& b)
             { return (a.second.pr < b.second.pr) || (a.second.pr == b.second.pr && a.second.at < b.second.at); });
             processing = queue[0];
             while(processing.second.bt > 0){
@@ -55,7 +55,7 @@ int main(){
         }
     }
     int TT;
-    std::sort(completion.begin(), completion.end(), [](std::pair<int, int>& a, std::pair<int, int>& b)
+    std::sort(completion.begin(), completion.end(), [](const std::pair<unsigned, unsigned>& a, const std::pair<unsigned, unsigned>& b)
     { return a.first < b.first; });
     for(size_t i = 0; i < processes.size(); i++){
         TT = completion[i].second - processes[i].at;
