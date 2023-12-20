@@ -5,5 +5,6 @@ This is a repository for Process Scheduling Program, it contains algorithms abou
 + Shortest Remaining Time First (SRTF)
 + Preemtive Priority (PP)
 + Round Robin (RR)
+
 These algorithms are written in C++ and uses std::vector and std::pair to manipulate the inputs and arranged them
 completely based in the given algorithm.
