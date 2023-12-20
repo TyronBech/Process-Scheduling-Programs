@@ -20,9 +20,9 @@ int main(){
     getline(std::cin >> std::ws, arrival_t);
     std::cout << "Enter burst time: ";
     getline(std::cin >> std::ws, burst_t);
-    std::istringstream atss(arrival_t);
-    std::istringstream btss(burst_t);
-    while(atss >> at_num && btss >> bt_num){
+    std::istringstream ss_at(arrival_t);
+    std::istringstream ss_bt(burst_t);
+    while(ss_at >> at_num && ss_bt >> bt_num){
         Process p; 
         p.at = at_num;
         p.bt = bt_num;
@@ -48,7 +48,7 @@ int main(){
             queue.push_back(processing);
         }
     }
-    std::sort(completion.begin(), completion.end(), [](const std::pair<unsigned, unsigned>& a, const std::pair<unsigned, unsigned>& b)
+    std::sort(completion.begin(), completion.end(), [](const std::pair<size_t, unsigned>& a, const std::pair<size_t, unsigned>& b)
     { return a.first < b.first; });
     for(size_t i = 0; i < processes.size(); i++){
         TT = completion[i].second - processes[i].at;

@@ -55,7 +55,7 @@ int main(){
         }
     }
     int TT;
-    std::sort(completion.begin(), completion.end(), [](const std::pair<unsigned, unsigned>& a, const std::pair<unsigned, unsigned>& b)
+    std::sort(completion.begin(), completion.end(), [](const std::pair<size_t, unsigned>& a, const std::pair<size_t, unsigned>& b)
     { return a.first < b.first; });
     for(size_t i = 0; i < processes.size(); i++){
         TT = completion[i].second - processes[i].at;

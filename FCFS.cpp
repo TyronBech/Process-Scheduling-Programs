@@ -16,9 +16,9 @@ int main(){
     std::getline(std::cin >> std::ws, arrival_t);
     std::cout << "Enter the burst time: ";
     std::getline(std::cin >> std::ws, burst_t);
-    std::stringstream rtss(arrival_t);
-    std::stringstream btss(burst_t);
-    while(rtss >> rt_num && btss >> bt_num){
+    std::stringstream ss_at(arrival_t);
+    std::stringstream ss_bt(burst_t);
+    while(ss_at >> rt_num && ss_bt >> bt_num){
         processes.push_back(std::make_pair(rt_num, bt_num));
     }
     for(size_t i = 0; i < processes.size(); i++){
