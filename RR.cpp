@@ -4,7 +4,7 @@
 #include<sstream>
 #include<utility>
 #include<algorithm>
-
+// Checked
 struct Process{
     unsigned at = 0;
     unsigned bt = 0;
@@ -37,26 +37,17 @@ int main(){
     for(unsigned time = 0; time < time_sum; ++time){
         while(time == processes[j].at){
             queue.push_back(std::make_pair(j, processes[j]));
-            std::cout << "J" << j + 1 << " has been pushed to the queue" << std::endl;
             j++;
         }
         if(start >= quantum && !queue.empty()){
-            std::cout << "J" << queue[0].first + 1 << " pushed again" << std::endl;
             queue.push_back(queue[0]);
             queue.erase(queue.begin());
             start = 0;
         }
-        std::cout << "Queue: ";
-        for(size_t i = 0; i < queue.size(); i++){
-            std::cout << "J" << queue[i].first + 1 << ' ';
-        }
-        std::cout << std::endl;
         if(!queue.empty()){
             queue[0].second.bt--;
-            std::cout << "J" << queue[0].first + 1 << "decrements at " << time << " sec" << std::endl;
             start++;
             if(queue[0].second.bt == 0){
-                std::cout << "J" << queue[0].first + 1 << " completed" << std::endl;
                 completion.push_back(std::make_pair(queue[0].first, time + 1));
                 queue.erase(queue.begin());
                 start = 0;

@@ -45,7 +45,9 @@ int main(){
         }
         if(!queue.empty()){
             std::sort(queue.begin(), queue.end(), [](const std::pair<size_t, Process>& a, const std::pair<size_t, Process>& b)
-            { return (a.second.pr < b.second.pr) || (a.second.pr == b.second.pr && a.second.at < b.second.at); });
+            { return (a.second.pr < b.second.pr)
+            || (a.second.pr == b.second.pr && a.second.at < b.second.at)
+            || (a.second.pr == b.second.pr && a.second.at == b.second.at && a.first < b.first); });
             processing = queue[0];
             while(processing.second.bt > 0){
                 processing.second.bt--;

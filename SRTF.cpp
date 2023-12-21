@@ -32,12 +32,14 @@ int main(){
     size_t j = 0;
     std::pair<size_t, Process> processing;
     for(unsigned time = 0; time < time_sum; time++){
-        if(time == processes[j].at){
+        while(time == processes[j].at){
             queue.push_back(std::make_pair(j, processes[j]));
             j++;
         }
         std::sort(queue.begin(), queue.end(), [](const std::pair<size_t, Process>& a, const std::pair<size_t, Process>& b)
-        { return a.second.bt < b.second.bt; });
+        { return (a.second.bt < b.second.bt)
+        || (a.second.bt == b.second.bt && a.second.at < b.second.at)
+        || (a.second.bt == b.second.bt && a.second.at == b.second.at && a.first < b.first); });
         processing = queue[0];
         processing.second.bt--;
         if(processing.second.bt == 0){
