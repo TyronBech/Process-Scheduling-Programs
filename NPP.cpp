@@ -72,13 +72,11 @@ int main(){
     // while loop for Non-Preemtive Priority algorithm
     // it is based on time which means it starts by 0 seconds/milliseconds
     // up until the total burst time - 1
-    std::cout << "Total burst time: " << time_sum << std::endl;
     while(time < time_sum){
         // while the arrival time is equal to the current time, it will be pushed to the queue
         // getting ready for processing
         while(time >= processes[j].at && j < processes.size()){
             queue.push_back(std::make_pair(j, processes[j]));
-            std::cout << "J" << j + 1 << " has been pushed to the queue" << std::endl;
             j++;
         }
         if(!queue.empty()){
@@ -91,13 +89,11 @@ int main(){
             processing = queue[0];
             // the while loop will decrement the process until reaching 0
             while(processing.second.bt > 0){
-                std::cout << "J" << processing.first + 1 << " is processing at " << time << "sec" << std::endl;
                 processing.second.bt--;
                 time++;
             }
             // after the loop, the current time will be stored to the completion vector,
             // along with the process which is done processing then erase the process to the queue
-            std::cout << "J" << processing.first + 1 << " done processing" << std::endl;
             completion.push_back(std::make_pair(processing.first, time));
             queue.erase(queue.begin());
         }
