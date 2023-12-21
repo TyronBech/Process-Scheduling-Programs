@@ -26,7 +26,8 @@ int main() {
         time_sum += bt_num;
     }
     std::pair<size_t, std::pair<unsigned, unsigned>> pro;
-    size_t j = 0, i = 0;
+    unsigned i = 0;
+    size_t j = 0;
     while(i < time_sum) {
         while(i >= processes[j].first && j < processes.size()){
             queue.push_back(std::make_pair(j, processes[j]));

@@ -5,8 +5,8 @@
 #include<algorithm>
 
 struct Process{
-    unsigned at;
-    unsigned bt;
+    unsigned at = 0;
+    unsigned bt = 0;
 };
 
 int main(){
@@ -31,7 +31,7 @@ int main(){
     }
     size_t j = 0;
     std::pair<size_t, Process> processing;
-    for(size_t time = 0; time < time_sum; time++){
+    for(unsigned time = 0; time < time_sum; time++){
         if(time == processes[j].at){
             queue.push_back(std::make_pair(j, processes[j]));
             j++;

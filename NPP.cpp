@@ -6,9 +6,9 @@
 #include<algorithm>
 
 struct Process{
-    int at;
-    int bt;
-    int pr;
+    int at = 0;
+    int bt = 0;
+    int pr = 0;
 };
 
 int main(){
@@ -36,7 +36,8 @@ int main(){
         time_sum += bt_num; 
     }
     std::pair<size_t, Process> processing;
-    size_t i = 0, j = 0;
+    unsigned i = 0;
+    size_t j = 0;
     while(i < time_sum){
         while(i >= processes[j].at && j < processes.size()){
             queue.push_back(std::make_pair(j, processes[j]));

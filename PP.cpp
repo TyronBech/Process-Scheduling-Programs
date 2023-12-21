@@ -6,9 +6,9 @@
 #include<algorithm>
 
 struct Process{
-    unsigned at;
-    unsigned bt;
-    unsigned pr;
+    unsigned at = 0;
+    unsigned bt = 0;
+    unsigned pr = 0;
 };
 
 int main(){
@@ -16,8 +16,8 @@ int main(){
     std::vector<std::pair<size_t, Process>> queue;
     std::vector<std::pair<size_t, unsigned>> completion;
     std::vector<std::pair<unsigned, unsigned>> TTWT;
-    std::cout << "Enter arrival time: ";
     std::string arrival_t = "", burst_t = "", priority = "";
+    std::cout << "Enter arrival time: ";
     std::getline(std::cin >> std::ws, arrival_t);
     std::cout << "Enter burst time: ";
     std::getline(std::cin >> std::ws, burst_t);
@@ -37,7 +37,7 @@ int main(){
     }
     size_t j = 0;
     std::pair<size_t, Process> processing;
-    for(size_t time = 0; time < time_sum; time++){
+    for(unsigned time = 0; time < time_sum; time++){
         if(time == processes[j].at){
             queue.push_back(std::make_pair(j, processes[j]));
             j++;
