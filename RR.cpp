@@ -74,18 +74,18 @@ int main(){
             queue.push_back(std::make_pair(j, processes[j]));
             j++;
         }
-        // if the start reached the quantum time, the process will be pushed at the back
-        // of the queue and reset the start to 0
-        if(start >= quantum && !queue.empty()){
-            queue.push_back(queue[0]);
-            queue.erase(queue.begin());
-            start = 0;
-        }
-        // as long as the queue is not empty the queue at index 0 will decrement its own burst time by 1
-        // incrementing the start and checking if the process is done processing, once done the
-        // queue at index 0 will be deleted, the current time will be pushed to the completion vector
-        // along with the original index, and the start will reset by 0
         if(!queue.empty()){
+            // if the start reached the quantum time, the process will be pushed at the back
+            // of the queue and reset the start to 0
+            if(start >= quantum){
+                queue.push_back(queue[0]);
+                queue.erase(queue.begin());
+                start = 0;
+            }
+            // as long as the queue is not empty the queue at index 0 will decrement its own burst time by 1
+            // incrementing the start and checking if the process is done processing, once done the
+            // queue at index 0 will be deleted, the current time will be pushed to the completion vector
+            // along with the original index, and the start will reset by 0
             queue[0].second.bt--;
             start++;
             if(queue[0].second.bt == 0){
@@ -93,6 +93,9 @@ int main(){
                 queue.erase(queue.begin());
                 start = 0;
             }
+        } else {
+            // Idle time, the excess time will be added to the total time to reach the end time of process
+            time_sum++;
         }
     }
     // after completing the process of decrementation of burst time for each process,

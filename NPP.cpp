@@ -65,7 +65,8 @@ int main(){
         processes.push_back(p);
         time_sum += bt_num; 
     }
-
+    // processing is the variable used to decrementing the burst time and updating the
+    // contents of the queue
     std::pair<size_t, Process> processing;
     unsigned time = 0; // time is used to for identifying the current seconds/milliseconds each loop
     size_t j = 0; // j will be used to traverse the processes vector
@@ -96,6 +97,10 @@ int main(){
             // along with the process which is done processing then erase the process to the queue
             completion.push_back(std::make_pair(processing.first, time));
             queue.erase(queue.begin());
+        } else {
+            // Idle time, the excess time will be added to the total time to reach the end time of process
+            time++;
+            time_sum++;
         }
     }
     // after completing the process of decrementation of burst time for each process,

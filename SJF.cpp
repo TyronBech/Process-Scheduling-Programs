@@ -90,6 +90,10 @@ int main() {
             // along with the process which is done processing then erase the process to the queue
             completion.push_back(std::make_pair(processing.first, time));
             queue.erase(queue.begin());
+        } else {
+            // Idle time, the excess time will be added to the total time to reach the end time of process
+            time++;
+            time_sum++;
         }
     }
     // after completing the process of decrementation of burst time for each process,

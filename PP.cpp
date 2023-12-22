@@ -97,6 +97,9 @@ int main(){
                 queue.erase(queue.begin());
                 queue.push_back(processing);
             }
+        } else {
+            // Idle time, the excess time will be added to the total time to reach the end time of process
+            time_sum++;
         }
     }
     // after completing the process of decrementation of burst time for each process,
