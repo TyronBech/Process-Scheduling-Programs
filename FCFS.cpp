@@ -42,6 +42,7 @@ int main(){
         TT = temporary variable to store the turnaround time of the process
         at_num = temporary variable to store each input for arrival time
         bt_num = temporary variable to store each input for burst time
+        id_num = process id of each process, incrementation is done inside the while loop for separation of inputs
     */
     unsigned time_sum = 0, TT = 0, at_num, bt_num, id_num = 1;
     // input variables for arrival time and burst time, input should be separated by spaces
