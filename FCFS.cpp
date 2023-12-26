@@ -3,35 +3,47 @@
 #include<sstream>
 #include<string>
 #include<utility>
+#include<algorithm>
 
 /*
     Process structure, this is where the attributes of each process is stored
+    id = process id number
     at = arrival time
     bt = burst time
+    cp = completion time
+    tt = turnaround time
+    wt = waiting time
 */
 struct Process{
+    unsigned id = 0;
     unsigned at = 0;
     unsigned bt = 0;
+    unsigned cp = 0;
+    unsigned tt = 0;
+    unsigned wt = 0;
+    void TTWT(const unsigned& completion_time){
+        this->cp = completion_time;
+        this->tt = this->cp - this->at;
+        this->wt = this->tt - this->bt;
+    }
 };
 // Main function
 int main(){
     // vector for input processes, it will store the raw input from the user
     std::vector<Process> processes;
-    // vector to get the completion time of the process
+    // temporary vector to get the completion time of the process
     std::vector<unsigned> completion;
     // vector for the ready queue of each process, once the arrival time is met or
     // (time = at) the process will be pushed to the queue according to the Shortest Job First algorithm
     // it will store the original index of each process and their Process structure
     std::vector<Process> queue;
-    // vector to store the result of turnaround time and waiting time of every processes
-    std::vector<std::pair<unsigned, unsigned>> TTWT;
     /*
         time_sum = will compute for the completion time by adding the burst time of each process
         TT = temporary variable to store the turnaround time of the process
         at_num = temporary variable to store each input for arrival time
         bt_num = temporary variable to store each input for burst time
     */
-    unsigned time_sum = 0, TT = 0, at_num, bt_num;
+    unsigned time_sum = 0, TT = 0, at_num, bt_num, id_num = 1;
     // input variables for arrival time and burst time, input should be separated by spaces
     // input will be manipulated by the stringstream
     std::string arrival_t = "", burst_t = "";
@@ -49,13 +61,17 @@ int main(){
     // alongside with summing up the burst time of each processes
     while(ss_at >> at_num && ss_bt >> bt_num){
         Process p;
+        p.id = id_num;
         p.at = at_num;
         p.bt = bt_num;
         processes.push_back(p);
         time_sum += bt_num;
+        id_num++;
     }
+    std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b)
+    { return a.at < b.at || (a.at == b.at && a.id < b.id); });
     // processing is the variable used to decrementing the burst time
-    Process processing;
+    unsigned processing;
     unsigned time = 0; // time is used to for identifying the current seconds/milliseconds each loop
     size_t j = 0; // j will be used to traverse the processes vector
     // for loop for getting the completion time of the process by adding the burst of
@@ -67,10 +83,10 @@ int main(){
         }
         if(!queue.empty()){
             // the first element on the queue will be stored in the processing variable then decrements it
-            processing = queue[0];
+            processing = queue[0].bt;
             // the while loop will decrement the process until reaching 0
-            while(processing.bt > 0) {
-                processing.bt--;
+            while(processing > 0) {
+                processing--;
                 time++;
             }
             // after the loop, the current time will be stored to the completion vector,
@@ -84,16 +100,14 @@ int main(){
         }
     }
     // for loop to compute for the turnaround time and waiting time for each processes
-    // then adding it in the TTWT vector
     for(size_t i = 0; i < processes.size(); i++){
-        TT = completion[i] - processes[i].at;
-        TTWT.push_back(std::make_pair(TT, (TT - processes[i].bt)));
+        processes[i].TTWT(completion[i]);
     }
     // Lastly, display all the contents of the process from the process ID to waiting time
     std::cout << "ID\t\tAT\t\tBT\t\tCT\t\tTT\t\tWT" << std::endl;
     for(size_t i = 0; i < processes.size(); i++){
-        std::cout << "J" << i + 1 << "\t\t" << processes[i].at << "\t\t" << processes[i].bt <<
-        "\t\t" << completion[i] << "\t\t" << TTWT[i].first << "\t\t" << TTWT[i].second << std::endl; 
+        std::cout << "J" << processes[i].id << "\t\t" << processes[i].at << "\t\t" << processes[i].bt <<
+        "\t\t" << processes[i].cp << "\t\t" << processes[i].tt << "\t\t" << processes[i].wt << std::endl; 
     }
     return 0;
 }
