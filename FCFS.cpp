@@ -90,7 +90,7 @@ int main(){
                 time++;
             }
             // after the loop, the current time will be stored to the completion vector,
-            // along with the process which is done processing then erase the process to the queue
+            // then erase the process to the queue
             completion.push_back(time);
             queue.erase(queue.begin());
         } else {
