@@ -69,10 +69,9 @@ int main(){
         time_sum += bt_num;
         id_num++;
     }
+    // sorting the vector by their arrival time, if equal a.at == b.at it will base on id
     std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b)
     { return a.at < b.at || (a.at == b.at && a.id < b.id); });
-    // processing is the variable used to decrementing the burst time
-    unsigned processing;
     unsigned time = 0; // time is used to for identifying the current seconds/milliseconds each loop
     size_t j = 0; // j will be used to traverse the processes vector
     // for loop for getting the completion time of the process by adding the burst of
@@ -83,11 +82,9 @@ int main(){
             j++;
         }
         if(!queue.empty()){
-            // the first element on the queue will be stored in the processing variable then decrements it
-            processing = queue[0].bt;
-            // the while loop will decrement the process until reaching 0
-            while(processing > 0) {
-                processing--;
+            // the while loop will decrement the first process in the queue until reaching 0
+            while(queue[0].bt > 0) {
+                queue[0].bt--;
                 time++;
             }
             // after the loop, the current time will be stored to the completion vector,

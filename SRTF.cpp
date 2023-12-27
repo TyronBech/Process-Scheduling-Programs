@@ -6,12 +6,25 @@
 
 /*
     Process structure, this is where the attributes of each process is stored
+    id = process id number
     at = arrival time
     bt = burst time
+    cp = completion time
+    tt = turnaround time
+    wt = waiting time
 */
 struct Process{
+    unsigned id = 0;
     unsigned at = 0;
     unsigned bt = 0;
+    unsigned cp = 0;
+    unsigned tt = 0;
+    unsigned wt = 0;
+    void TTWT(const unsigned& completion_time){
+        this->cp = completion_time;
+        this->tt = this->cp - this->at;
+        this->wt = this->tt - this->bt;
+    }
 };
 // Main function
 int main(){
@@ -25,8 +38,6 @@ int main(){
     // vector to get the completion time and original index of the process, it is pair since
     // the queue doesn't store the processes by their index
     std::vector<std::pair<size_t, unsigned>> completion;
-    // vector to store the result of turnaround time and waiting time of every processes
-    std::vector<std::pair<unsigned, unsigned>> TTWT;
     // input variables for arrival time and burst time, input should be separated by spaces
     // input will be manipulated by the stringstream
     std::string arrival_t = "", burst_t = "";
@@ -36,8 +47,9 @@ int main(){
         time_sum = variable to compute the total burst time of all process,
         it will be used in the for loop once the algorithm is started
         TT = temporary variable to store the turnaround time of each processes
+        id_num = process id of each process, incrementation is done inside the while loop for separation of inputs
     */
-    unsigned at_num, bt_num, time_sum = 0, TT;
+    unsigned at_num, bt_num, time_sum = 0, TT, id_num = 1;
     // inputting of arrival time and burst time
     std::cout << "Process Scheduling (SRTF)" << std::endl;
     std::cout << "Enter arrival time: ";
@@ -51,15 +63,18 @@ int main(){
     // while loop for separation of inputs and storing those values in the processes vector
     // alongside with summing up the burst time of each processes
     while(ss_at >> at_num && ss_bt >> bt_num){
-        Process p; 
+        Process p;
+        p.id = id_num;
         p.at = at_num;
         p.bt = bt_num;
         processes.push_back(p);
         time_sum += bt_num;
+        id_num++;
     }
+    // sorting the vector by their arrival time, if equal a.at == b.at it will base on id
+    std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b)
+    { return a.at < b.at || (a.at == b.at && a.id < b.id); });
     size_t j = 0; // j will be used to traverse the processes vector
-    // processing is the variable used to decrementing the burst time
-    std::pair<size_t, Process> processing;
     // for loop for Shortest Remaining Time First algorithm
     // it is based on time which means it starts by 0 seconds/milliseconds
     // up until the total burst time - 1
@@ -76,17 +91,16 @@ int main(){
             { return (a.second.bt < b.second.bt)
             || (a.second.bt == b.second.bt && a.second.at < b.second.at)
             || (a.second.bt == b.second.bt && a.second.at == b.second.at && a.first < b.first); });
-            // then the first element on the queue will be stored in the processing variable then decrements it
-            processing = queue[0];
-            processing.second.bt--;
+            // decrementing the burst time of the first process in the queue
+            queue[0].second.bt--;
             // if the burst time reach 0 it means its done, then the current time will be pushed to the completion vector
             // then erasing the first element in the queue, else moving the first element of the queue to the back of the queue
-            if(processing.second.bt == 0){
-                completion.push_back(std::make_pair(processing.first, time + 1));
+            if(queue[0].second.bt == 0){
+                completion.push_back(std::make_pair(queue[0].first, time + 1));
                 queue.erase(queue.begin());
             } else {
+                queue.push_back(queue[0]);
                 queue.erase(queue.begin());
-                queue.push_back(processing);
             }
         } else {
             // Idle time, the excess time will be added to the total time to reach the end time of process
@@ -98,17 +112,15 @@ int main(){
     std::sort(completion.begin(), completion.end(), [](const std::pair<size_t, unsigned>& a, const std::pair<size_t, unsigned>& b)
     { return a.first < b.first; });
     // for loop to compute for the turnaround time and waiting time for each processes
-    // then adding it in the TTWT vector
     for(size_t i = 0; i < processes.size(); i++){
-        TT = completion[i].second - processes[i].at;
-        TTWT.push_back(std::make_pair(TT, TT - processes[i].bt));
+        processes[i].TTWT(completion[i].second);
     }
     // Lastly, display all the contents of the process from the process ID to waiting time
     std::cout << "ID\t\tAT\t\tBT\t\tCT\t\tTT\t\tWT" << std::endl;
     for (size_t i = 0; i < processes.size(); i++) {
-        std::cout << "J" << i + 1 << "\t\t" << processes[i].at << "\t\t"
-                  << processes[i].bt << "\t\t" << completion[i].second << "\t\t"
-                  << TTWT[i].first << "\t\t" << TTWT[i].second << std::endl;
+        std::cout << "J" << processes[i].id << "\t\t" << processes[i].at << "\t\t"
+                  << processes[i].bt << "\t\t" << processes[i].cp << "\t\t"
+                  << processes[i].tt << "\t\t" << processes[i].wt << std::endl;
     }
     return 0;
 }
