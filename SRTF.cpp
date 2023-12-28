@@ -98,9 +98,6 @@ int main(){
             if(queue[0].second.bt == 0){
                 completion.push_back(std::make_pair(queue[0].first, time + 1));
                 queue.erase(queue.begin());
-            } else {
-                queue.push_back(queue[0]);
-                queue.erase(queue.begin());
             }
         } else {
             // Idle time, the excess time will be added to the total time to reach the end time of process
