@@ -67,13 +67,40 @@ int main(){
     std::istringstream ss_at(arrival_t);
     std::istringstream ss_bt(burst_t);
     std::istringstream ss_pr(priority);
+    // checking if the number of arrival time is equal to the number of burst time and their sign
+    int value;
+    size_t size_at = 0, size_bt = 0, size_pr = 0;
+    while (ss_at >> value) {
+        if (value < 0) {
+            throw std::runtime_error("Negative number found");
+        } else size_at++;
+    }
+    while (ss_bt >> value) {
+        if (value < 0) {
+            throw std::runtime_error("Negative number found");
+        } else size_bt++;
+    }
+    while (ss_pr >> value) {
+        if (value < 0) {
+            throw std::runtime_error("Negative number found");
+        } else size_pr++;
+    }
+    if(size_at != size_bt || size_at != size_pr)
+        throw std::out_of_range("Number of arrival time is not equal to number of burst time or priority");
+    ss_at.clear();
+    ss_at.seekg(0, std::ios::beg);
+    ss_bt.clear();
+    ss_bt.seekg(0, std::ios::beg);
+    ss_pr.clear();
+    ss_pr.seekg(0, std::ios::beg);
     // while loop for separation of inputs and storing those values in the processes vector
     // alongside with summing up the burst time of each processes
     while(ss_at >> at_num && ss_bt >> bt_num && ss_pr >> pr_num){
         Process p;
         p.id = id_num;
-        p.at = at_num;
-        p.bt = bt_num;
+        p.at = static_cast<unsigned>(at_num);
+        p.bt = static_cast<unsigned>(bt_num);
+        p.pr = static_cast<unsigned>(pr_num);
         p.pr = pr_num;
         processes.push_back(p);
         time_sum += bt_num;
