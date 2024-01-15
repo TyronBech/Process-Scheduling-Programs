@@ -123,7 +123,6 @@ int main() {
             // taking the process id to monitor their time of process
             Time_process current_process;
             current_process.p_id = queue[0].second.id;
-            std::cout << "Current process: ID" << queue[0].second.id << std::endl;
             current_process.time.first = time;
             // the while loop will decrement the first process in the queue until reaching 0
             while(queue[0].second.bt > 0) {

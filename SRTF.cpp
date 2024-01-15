@@ -4,6 +4,12 @@
 #include<utility>
 #include<algorithm>
 
+// Time_process to monitor the processing time of each process
+// mainly to get the specific second/millisecond which they being processed
+struct Time_process{
+    unsigned p_id = 0;
+    std::pair<unsigned, unsigned> time;
+};
 /*
     Process structure, this is where the attributes of each process is stored
     id = process id number
@@ -38,6 +44,8 @@ int main(){
     // vector to get the completion time and original index of the process, it is pair since
     // the queue doesn't store the processes by their index
     std::vector<std::pair<size_t, unsigned>> completion;
+    // vector to get the starting time and ending time of each process
+    std::vector<Time_process> processing_time;
     // input variables for arrival time and burst time, input should be separated by spaces
     // input will be manipulated by the stringstream
     std::string arrival_t = "", burst_t = "";
