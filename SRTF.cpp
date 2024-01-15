@@ -101,6 +101,7 @@ int main(){
     std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b)
     { return a.at < b.at || (a.at == b.at && a.id < b.id); });
     size_t j = 0; // j will be used to traverse the processes vector
+    Time_process current;
     // for loop for Shortest Remaining Time First algorithm
     // it is based on time which means it starts by 0 seconds/milliseconds
     // up until the total burst time - 1
@@ -117,11 +118,19 @@ int main(){
             { return (a.second.bt < b.second.bt)
             || (a.second.bt == b.second.bt && a.second.at < b.second.at)
             || (a.second.bt == b.second.bt && a.second.at == b.second.at && a.first < b.first); });
+
+            if(queue[0].second.id != current.p_id){
+                processing_time.push_back(current);
+                current.p_id = queue[0].second.id;
+                current.time.first = time;
+            }
             // decrementing the burst time of the first process in the queue
             queue[0].second.bt--;
             // if the burst time reach 0 it means its done, then the current time will be pushed to the completion vector
             // then erasing the first element in the queue, else moving the first element of the queue to the back of the queue
             if(queue[0].second.bt == 0){
+                current.time.second = time + 1;
+                processing_time.push_back(current);
                 completion.push_back(std::make_pair(queue[0].first, time + 1));
                 queue.erase(queue.begin());
             }
@@ -129,7 +138,19 @@ int main(){
             // Idle time, the excess time will be added to the total time to reach the end time of process
             time_sum++;
         }
+        current.time.second = time + 1;
     }
+    std::sort(processing_time.begin(), processing_time.end(), [](const Time_process& a, const Time_process& b){
+        return a.p_id < b.p_id; });
+    auto uniqueEnd = std::unique(processing_time.begin(), processing_time.end(),
+                                 [](const Time_process& a, const Time_process& b) {
+                                     return a.p_id == b.p_id && 
+                                     a.time.first == b.time.first && 
+                                     a.time.second == b.time.second;
+                                 });
+    processing_time.erase(uniqueEnd, processing_time.end());
+    std::sort(processing_time.begin(), processing_time.end(), [](const Time_process& a, const Time_process& b){
+        return a.time.first < b.time.first; });
     // after completing the process of decrementation of burst time for each process,
     // the completion vector will be sorted based on the original index of each process ascendingly
     std::sort(completion.begin(), completion.end(), [](const std::pair<size_t, unsigned>& a, const std::pair<size_t, unsigned>& b)
@@ -144,6 +165,10 @@ int main(){
         std::cout << "J" << processes[i].id << "\t\t" << processes[i].at << "\t\t"
                   << processes[i].bt << "\t\t" << processes[i].cp << "\t\t"
                   << processes[i].tt << "\t\t" << processes[i].wt << std::endl;
+    }
+    std::cout << "ID\t\tT1\t\tT2" << std::endl;
+    for(size_t i = 1; i < processing_time.size(); i++){
+        std::cout << processing_time[i].p_id << "\t\t" << processing_time[i].time.first << "\t\t" << processing_time[i].time.second << std::endl;
     }
     return 0;
 }
