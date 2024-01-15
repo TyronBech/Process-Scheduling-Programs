@@ -5,6 +5,12 @@
 #include <utility>
 #include <algorithm>
 
+// Time_process to monitor the processing time of each process
+// mainly to get the specific second/millisecond which they being processed
+struct Time_process{
+    unsigned p_id = 0;
+    std::pair<unsigned, unsigned> time;
+};
 /*
     Process structure, this is where the attributes of each process is stored
     id = process id number
@@ -39,8 +45,8 @@ int main() {
     // (time = at) the process will be pushed to the queue according to the Shortest Job First algorithm
     // it will store the original index of each process and their Process structure
     std::vector<std::pair<size_t, Process>> queue;
-    // vector to store the result of turnaround time and waiting time of every processes
-    std::vector<std::pair<unsigned, unsigned>> TTWT;
+    // vector to get the starting time and ending time of each process
+    std::vector<Time_process> processing_time;
     /*
         at_num = temporary variable to store each input for arrival time
         bt_num = temporary variable to store each input for burst time
@@ -114,11 +120,18 @@ int main() {
             { return (a.second.bt < b.second.bt)
             || (a.second.bt == b.second.bt && a.second.at < b.second.at)
             || (a.second.bt == b.second.bt && a.second.at == b.second.at && a.second.id < b.second.id); });
+            // taking the process id to monitor their time of process
+            Time_process current_process;
+            current_process.p_id = queue[0].second.id;
+            std::cout << "Current process: ID" << queue[0].second.id << std::endl;
+            current_process.time.first = time;
             // the while loop will decrement the first process in the queue until reaching 0
             while(queue[0].second.bt > 0) {
                 queue[0].second.bt--;
                 time++;
             }
+            current_process.time.second = time;
+            processing_time.push_back(current_process);
             // after the loop, the current time will be stored to the completion vector,
             // along with the process which is done processing then erase the process to the queue
             completion.push_back(std::make_pair(queue[0].first, time));
@@ -144,6 +157,10 @@ int main() {
         std::cout << "J" << processes[i].id << "\t\t" << processes[i].at << "\t\t"
                   << processes[i].bt << "\t\t" << processes[i].cp << "\t\t"
                   << processes[i].tt << "\t\t" << processes[i].wt << std::endl;
+    }
+    std::cout << "ID\t\tT1\t\tT2" << std::endl;
+    for(size_t i = 0; i < processing_time.size(); i++){
+        std::cout << processing_time[i].p_id << "\t\t" << processing_time[i].time.first << "\t\t" << processing_time[i].time.second << std::endl;
     }
     return 0;
 }
